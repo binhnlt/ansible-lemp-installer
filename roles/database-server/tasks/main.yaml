@@ -1,0 +1,16 @@
+---
+# MariaDB Server
+- name: Install MySQL / MariaDB server
+  become: yes
+  become_method: sudo
+  apt:
+    state: latest
+    update_cache: yes
+    autoclean: yes
+    name: 
+      - "mariadb-server"
+      - "mariadb-client"
+
+# Create custom config file
+- name: Create the .my.cnf file
+  template: src=.my.cnf dest=~/.my.cnf

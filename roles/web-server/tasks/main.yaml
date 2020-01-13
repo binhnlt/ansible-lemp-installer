@@ -1,0 +1,91 @@
+---
+# NGINX & PHP-FPM
+- name: Install from NGINX & PHP-FPM
+  become: yes
+  become_method: sudo
+  apt:
+    state: latest
+    update_cache: yes
+    name: 
+      - "nginx"
+      - "php7.3-fpm"
+      - "php7.3-cli"
+      - "php7.3-curl"
+      - "php7.3-intl"
+      - "php7.3-json"
+      - "php7.3-dom"
+      - "php7.3-gd"
+      - "php7.3-zip"
+      - "php7.3-opcache"
+      - "php7.3-sqlite3"
+      - "php7.3-mbstring"
+      - "php7.3-common"
+      - "php7.3-mysql"
+      - "php-memcached"
+
+- name: Copy nginx file
+  template: src=site_default.conf dest=/etc/nginx/sites-enabled/default
+  notify: Restart nginx service
+
+- name: Ensure php7.3-fpm cgi.fix_pathinfo=0
+  lineinfile: dest='{{item}}' regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
+  with_items:
+    - /etc/php/7.3/fpm/php.ini
+    - /etc/php/7.3/cli/php.ini
+  notify:
+    - Restart php-fpm service
+    - Restart nginx service
+
+- name: Creates directory for phpinfo.php
+  file: path=/var/www/html state=directory
+
+- name: Copy phpinfo file
+  template: src=phpinfo.php dest=/var/www/html/phpinfo.php
+
+# Virtualhost Manage Script
+# Credit goes to https://github.com/RoverWire/virtualhost
+- name: Create virtualhost manage script
+  become: yes
+  become_method: sudo
+  template: src=virtualhost-nginx.sh dest=/usr/local/bin/virtualhost
+
+- name: Set virtualhost manage script executable
+  become: yes
+  become_method: sudo
+  file: dest=/usr/local/bin/virtualhost mode=a+x
+
+# NodeJS with NVM
+# Credit goes to https://gist.github.com/komuw/b3b5d24977d4df7bd549
+- name: Install nvm
+  shell: >
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+  args:
+    warn: false
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+- name: Install node
+  shell: >
+    . {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install {{ item }}
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.nvm/versions/{{ item }}"
+  loop:
+    - node
+
+# YARN, Composer, Memcached, SQLite3, Certbot
+- name: Install certbot
+  become: yes
+  become_method: sudo
+  apt:
+    state: latest
+    update_cache: yes
+    name: 
+      - "yarn"
+      - "composer"
+      - "supervisor"
+      - "memcached"
+      - "sqlite3"
+      - "certbot"
