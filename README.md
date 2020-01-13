@@ -1,4 +1,4 @@
-#ANSIBLE LEMP INSTALLER
+# ANSIBLE LEMP INSTALLER
 
 
 ## What's included
@@ -31,6 +31,6 @@ ansible-playbook install.yaml -i hosts
 ```
 
 ## Credits
-Inspired by https://github.com/michielgerritsen/ansible-lemp-for-raspberry-pi
-Virtualhost Manage Script https://github.com/RoverWire/virtualhost
-NVM & NodeJS installer by https://gist.github.com/komuw/b3b5d24977d4df7bd549
+Inspired by https://github.com/michielgerritsen/ansible-lemp-for-raspberry-pi  
+Virtualhost Manage Script https://github.com/RoverWire/virtualhost  
+NVM & NodeJS installer by https://gist.github.com/komuw/b3b5d24977d4df7bd549  
