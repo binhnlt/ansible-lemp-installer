@@ -54,24 +54,25 @@ if [ "$action" == 'create' ]
 			### give permission to root dir
 			chmod 755 $rootDir
 			### write test file in the new domain dir
-			if ! echo "<?php echo phpinfo(); ?>" > $rootDir/phpinfo.php
+			if ! echo "<?php echo phpinfo(); ?>" > $rootDir/index.php
 				then
 					echo $"ERROR: Not able to write in file $rootDir/phpinfo.php. Please check permissions."
 					exit;
 			else
-					echo $"Added content to $rootDir/phpinfo.php."
+					echo $"Added content to $rootDir/index.php."
 			fi
 		fi
 
 		### create virtual host rules file
 		if ! echo "server {
+			listen 80;
 			listen 443 ssl http2;
 			root $rootDir;
 			index index.php index.html index.htm;
 			server_name $domain;
 
-			ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
-			ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
+			# ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
+			# ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
 
 			gzip on;
 
@@ -190,7 +191,9 @@ if [ "$action" == 'create' ]
 		ln -s $sitesAvailable$domain $sitesEnable$domain
 
 		#execute certbot to create ssl
-		certbot certonly --standalone -d $domain
+		# certbot certonly --webroot -w $rootDir -d $domain
+		echo -e $"Run this command to generate SSL from Let's Encrypt \n"
+		echo -e $"certbot certonly --webroot -w $rootDir -d $domain \n"
 
 		### restart Nginx
 		service nginx restart

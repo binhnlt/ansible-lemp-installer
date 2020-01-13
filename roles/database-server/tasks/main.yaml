@@ -14,3 +14,10 @@
 # Create custom config file
 - name: Create the .my.cnf file
   template: src=.my.cnf dest=~/.my.cnf
+
+# Create super admin user
+- name: Create super admin user
+  become: yes
+  become_method: sudo
+  command: |
+    mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin'; GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION; CREATE USER 'admin'@'%' IDENTIFIED BY 'admin'; GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"

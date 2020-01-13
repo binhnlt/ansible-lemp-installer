@@ -1,5 +1,29 @@
 ---
 
+# Install python3
+- name: Install python3
+  become: yes
+  become_method: sudo
+  apt:
+    state: latest
+    update_cache: yes
+    autoclean: yes
+    name: 
+      - "libpython3-dev"
+      - "libffi-dev"
+      - "libssl-dev"
+      - "python3" 
+      - "python3-dev" 
+
+- name: Make python3 as default python
+  become: yes
+  become_method: sudo
+  file:
+    force: yes
+    src: "/usr/bin/python3"
+    dest: "/usr/bin/python"
+    state: link
+
 # Essential softwares
 - name: Install from apt
   become: yes
@@ -14,3 +38,5 @@
       - "vim"
       - "htop"
       - "cockpit"
+      - "tmux"
+      

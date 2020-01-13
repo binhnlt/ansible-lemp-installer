@@ -89,3 +89,4 @@
       - "memcached"
       - "sqlite3"
       - "certbot"
+      - "python-certbot-nginx"
