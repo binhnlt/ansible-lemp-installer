@@ -1,0 +1,11 @@
+{
+    "cSpell.ignoreWords": [
+        "ansible",
+        "autoremove",
+        "certbot",
+        "chdir",
+        "env",
+        "sqlite",
+        "virtualhost"
+    ]
+}

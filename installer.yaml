@@ -1,0 +1,13 @@
+---
+- name: Ubuntu / Debian web server installer
+  hosts: all
+  remote_user: pi
+  become: yes
+  become_method: sudo
+
+  roles:
+  - apt-update
+  - essential-softwares
+  - database-server
+  - web-server
+  

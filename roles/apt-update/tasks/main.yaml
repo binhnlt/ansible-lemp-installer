@@ -1,0 +1,9 @@
+---
+- name: Update and Upgrade packages
+  become: yes
+  become_method: sudo
+  apt:
+    state: latest
+    update_cache: yes
+    upgrade: "yes"
+    autoremove: "yes"

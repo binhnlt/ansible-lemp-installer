@@ -1,0 +1,11 @@
+---
+- name: Restart nginx service
+  become: yes
+  become_method: sudo
+  service: name=nginx state=restarted
+
+- name: Restart php-fpm service
+  become: yes
+  become_method: sudo
+  service: name=php-fpm state=restarted
+
