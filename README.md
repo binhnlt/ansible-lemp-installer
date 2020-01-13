@@ -22,7 +22,6 @@
 - git
 - vim
 - htop
-- 
 
 ## How to run
 
