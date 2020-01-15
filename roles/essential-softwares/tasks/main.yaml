@@ -25,7 +25,7 @@
     state: link
 
 # Essential softwares
-- name: Install from apt
+- name: Install from some Essential softwares
   become: yes
   become_method: sudo
   apt:
@@ -39,4 +39,6 @@
       - "htop"
       - "cockpit"
       - "tmux"
-      
+      - "openjdk-11-jre"
+      - "jpegoptim"
+      - "optipng"

@@ -65,95 +65,95 @@ if [ "$action" == 'create' ]
 
 		### create virtual host rules file
 		if ! echo "server {
-			listen 80;
-			listen 443 ssl http2;
-			root $rootDir;
-			index index.php index.html index.htm;
-			server_name $domain;
+	listen 80;
+	listen 443 ssl http2;
+	root $rootDir;
+	index index.php index.html index.htm;
+	server_name $domain;
 
-			# ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
-			# ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
+	# ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
+	# ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
 
-			gzip on;
+	gzip on;
 
-			# Compress level value is a number between 1 and 9 for this value. 
-			# 5 is a perfect compromise between size and CPU usage, offering about a 75% reduction for most ASCII files (almost identical to level 9)
-    		gzip_comp_level 5; 
-			
-			# Not to compress anything that’s already small and unlikely to shrink much further
-			gzip_min_length    256;
-			
-			gzip_types
-			application/atom+xml
-			application/javascript
-			application/json
-			application/ld+json
-			application/manifest+json
-			application/rss+xml
-			application/vnd.geo+json
-			application/vnd.ms-fontobject
-			application/x-font-ttf
-			application/x-web-app-manifest+json
-			application/xhtml+xml
-			application/xml
-			font/opentype
-			image/bmp
-			image/svg+xml
-			image/x-icon
-			text/cache-manifest
-			text/css
-			text/plain
-			text/vcard
-			text/vnd.rim.location.xloc
-			text/vtt
-			text/x-component
-			text/x-cross-domain-policy;
-			# text/html is always compressed by gzip module
+	# Compress level value is a number between 1 and 9 for this value. 
+	# 5 is a perfect compromise between size and CPU usage, offering about a 75% reduction for most ASCII files (almost identical to level 9)
+	gzip_comp_level 5;
 
-			# serve static files directly
-			location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
-				
-				# hotlinking protection
-				valid_referers none blocked $domain *.$domain;
-				if (\$invalid_referer) {
-					return   403;
-				}
-				
-				access_log off;
-				expires max;
-			}
+	# Not to compress anything that’s already small and unlikely to shrink much further
+	gzip_min_length    256;
 
-			# removes trailing slashes (prevents SEO duplicate content issues)
-			if (!-d \$request_filename) {
-				rewrite ^/(.+)/\$ /\$1 permanent;
-			}
+	gzip_types
+	application/atom+xml
+	application/javascript
+	application/json
+	application/ld+json
+	application/manifest+json
+	application/rss+xml
+	application/vnd.geo+json
+	application/vnd.ms-fontobject
+	application/x-font-ttf
+	application/x-web-app-manifest+json
+	application/xhtml+xml
+	application/xml
+	font/opentype
+	image/bmp
+	image/svg+xml
+	image/x-icon
+	text/cache-manifest
+	text/css
+	text/plain
+	text/vcard
+	text/vnd.rim.location.xloc
+	text/vtt
+	text/x-component
+	text/x-cross-domain-policy;
+	# text/html is always compressed by gzip module
 
-			# unless the request is for a valid file (image, js, css, etc.), send to bootstrap
-			if (!-e \$request_filename) {
-				rewrite ^/(.*)\$ /index.php?/\$1 last;
-				break;
-			}
+	# serve static files directly
+	location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
+		
+		# hotlinking protection
+		valid_referers none blocked $domain *.$domain;
+		if (\$invalid_referer) {
+			return   403;
+		}
+		
+		access_log off;
+		expires max;
+	}
 
-			# removes trailing 'index' from all controllers
-			if (\$request_uri ~* index/?\$) {
-				rewrite ^/(.*)/index/?\$ /\$1 permanent;
-			}
+	# removes trailing slashes (prevents SEO duplicate content issues)
+	if (!-d \$request_filename) {
+		rewrite ^/(.+)/\$ /\$1 permanent;
+	}
 
-			# catch all
-			error_page 404 /index.php;
+	# unless the request is for a valid file (image, js, css, etc.), send to bootstrap
+	if (!-e \$request_filename) {
+		rewrite ^/(.*)\$ /index.php?/\$1 last;
+		break;
+	}
 
-			location ~ \.php$ {
-				include snippets/fastcgi-php.conf;
-                fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
-                fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-                include fastcgi_params;
-			}
+	# removes trailing 'index' from all controllers
+	if (\$request_uri ~* index/?\$) {
+		rewrite ^/(.*)/index/?\$ /\$1 permanent;
+	}
 
-			location ~ /\.ht {
-				deny all;
-			}
+	# catch all
+	error_page 404 /index.php;
 
-		}" > $sitesAvailable$domain
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+		fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+		include fastcgi_params;
+	}
+
+	location ~ /\.ht {
+		deny all;
+	}
+
+}" > $sitesAvailable$domain
 		then
 			echo -e $"There is an ERROR create $domain file"
 			exit;
