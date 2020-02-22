@@ -42,3 +42,4 @@
       - "openjdk-11-jre"
       - "jpegoptim"
       - "optipng"
+      - "supervisor"

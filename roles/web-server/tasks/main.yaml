@@ -34,7 +34,7 @@
     - /etc/php/7.3/fpm/php.ini
     - /etc/php/7.3/cli/php.ini
   notify:
-    - Restart php-fpm service
+    - Restart nginx service
 
 - name: Creates directory for phpinfo.php
   file: path=/var/www/html state=directory
